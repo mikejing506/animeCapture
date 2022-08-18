@@ -8,11 +8,12 @@ fs.readdir('Z:\\btdownload\\anime', (err, files) => {
     let bangumiName,bangumiEP;
     files.forEach(videoName => {
         let slice = re.exec(videoName)
-        let _videoName = videoName[slice[0].length]
-        console.log(slice)
-        if (slice && _videoName !== '[') {//[subGroupName] Anime Name with ep[balaba]
+        let _videoNameBegin = videoName[slice[0].length]
+        if (slice && _videoNameBegin !== '[') {//[subGroupName] Anime Name with ep[balaba]
+            let _videoName = videoName.substring(slice[0].length)
+            console.log(_videoName)
             let name = regName.exec(_videoName);
-            console.log(`${name} + ${_videoName}`)
+            console.log(`${name}`)
             if (name[0]) { //[subGroupName] Anime Name - EP [balaba]
                 // console.log(videoName)
                 bangumiName = _videoName.substring(0, name.index)
