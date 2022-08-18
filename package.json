@@ -1,0 +1,19 @@
+{
+  "name": "animecapture",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikejing506/animecapture.git"
+  },
+  "author": "Akimoto Akira",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/mikejing506/animecapture/issues"
+  },
+  "homepage": "https://github.com/mikejing506/animecapture#readme"
+}
