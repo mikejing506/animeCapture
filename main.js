@@ -1,5 +1,10 @@
 const fs = require('fs')
 
+let path = '/mnt/lvm/share/btdownload/anime'
+let linkPath = '/mnt/lvm/share/Ani'
+
+const passExt = ['!qB']
+
 function removeFanSub(fileName){
     let reg = /^\[.*?\](\s)?/g
     if(reg.test(fileName)){
@@ -15,19 +20,31 @@ function getBangumiNameAndEP(fileName){
         SqEPReg.test(fileName)
         let EPIndex = SqEPReg.lastIndex
         let EP = fileName.match(SqEPReg)[0].replace(/[\[\]]/g,'')
-        return `${fileName.substring(0,EPIndex).replace(SqEPReg,'').replace(/[\[\]]/g,'')} - ${EP}`
+        let Bangumi = fileName.substring(0,EPIndex).replace(SqEPReg,'').replace(/[\[\]]/g,'')
+        return {
+            BGM:Bangumi,
+            EP:EP
+        }
     }else{
-        let reg = /\s-\s[0-9]+(v[0-9])?/g
+        let reg = /\s-\s[0-9]+(v[0-9]|.5)?/g
         if(reg.test(fileName)){
             let EPIndex = reg.lastIndex
-            let EP = fileName.match(reg)
-            return `${fileName.substring(0,EPIndex).replace(reg,'')}${EP}`
+            let EP = fileName.match(reg)[0].replace(' - ','')
+            let Bangumi = fileName.substring(0,EPIndex).replace(reg,'')
+            return {
+                BGM:Bangumi,
+                EP:EP
+            }
         }else{
             let SqEPReg = /\[[0-9]+(v[0,9])?\]/g
             if(SqEPReg.test(fileName)){
                 let EPIndex = SqEPReg.lastIndex
                 let EP = fileName.match(SqEPReg)[0].replace(/[\[\]]/g,'')
-                return `${fileName.substring(0,EPIndex).replace(SqEPReg,'')} - ${EP}`
+                let Bangumi = fileName.substring(0,EPIndex).replace(SqEPReg,'')
+                return {
+                    BGM:Bangumi,
+                    EP:EP
+                }
             }else{//OVA Movie etc.
                 console.log(`3${fileName}`)
             }
@@ -35,10 +52,24 @@ function getBangumiNameAndEP(fileName){
     }
 }
 
-// let files = require('./files.json')
-let path = 'Z:\\btdownload\\anime'
 files = fs.readdirSync(path)
 
 files.map((file)=>{
-    console.log(getBangumiNameAndEP(removeFanSub(file)))
+    let fileExt = file.split('.').pop();
+    if(!passExt.includes(fileExt)){
+        let ep = getBangumiNameAndEP(removeFanSub(file))
+    
+        if(ep){
+            console.log(`${linkPath}/${ep.BGM}/${ep.EP}`)
+            if(!fs.existsSync(`${linkPath}/${ep.BGM}`)){
+                fs.mkdirSync(`${linkPath}/${ep.BGM}`)
+            }
+            if(!fs.existsSync(`${linkPath}/${ep.BGM}/${ep.EP}`)){
+                fs.linkSync(`${path}/${file}`,`${linkPath}/${ep.BGM}/${ep.EP}.${fileExt}`)
+            }else{
+                fs.unlinkSync(`${linkPath}/${ep.BGM}/${ep.EP}.${fileExt}`)
+                fs.linkSync(`${path}/${file}`,`${linkPath}/${ep.BGM}/${ep.EP}.${fileExt}`)
+            }
+        }
+    }
 })
