@@ -1,34 +1,35 @@
 const fs = require('fs')
 
 let re = new RegExp('^\\[.*?\\](\\s)', 'g')
-let regName = new RegExp('-\\s[0-9]+(v[0-9])?', 'g')
+let regName = new RegExp(/\B\s-\s[0-9]+(v[0-9])?/, 'g')
 let regNameInSq = new RegExp('\\[[0-9]*?\\]', 'g')
 
 fs.readdir('Z:\\btdownload\\anime', (err, files) => {
     let bangumiName,bangumiEP;
     files.forEach(videoName => {
         let slice = re.exec(videoName)
-        let _videoNameBegin = videoName[slice[0].length]
-        if (slice && _videoNameBegin !== '[') {//[subGroupName] Anime Name with ep[balaba]
+        if (slice && videoName[slice[0].length] !== '[') {//[subGroupName] Anime Name with ep[balaba]
             let _videoName = videoName.substring(slice[0].length)
-            console.log(_videoName)
-            let name = regName.exec(_videoName);
-            console.log(`${name}`)
-            if (name[0]) { //[subGroupName] Anime Name - EP [balaba]
+            // console.log(_videoName)
+            let ep = regName.exec(_videoName);
+            // console.log(ep)
+            if (ep) { //[subGroupName] Anime Name - EP [balaba]
                 // console.log(videoName)
-                bangumiName = _videoName.substring(0, name.index)
-                bangumiEP = name[0].split(' - ')[1]
+                bangumiName = _videoName.substring(0, ep.index)
+                bangumiEP = ep[0].split('- ')[1]
                 // console.log(`${bangumiName} - ${bangumiEP}`)
             } else {
-                name = regNameInSq.exec(_videoName) //[subGroupName] Anime Name [Ep][balaba]
+                ep = regNameInSq.exec(_videoName) //[subGroupName] Anime Name [Ep][balaba]
                 // console.log(name)
-                if(name){
-                    bangumiName = _videoName.substring(0, name.index)
+                if(ep){
+                    bangumiName = _videoName.substring(0, ep.index)
                     let Sq = new RegExp('[\\]\\[]','g')
-                    bangumiEP = name[0].replace(Sq,'')
+                    bangumiEP = ep[0].replace(Sq,'')
                     // console.log(`${bangumiName} - ${bangumiEP}`)
                 }else{
-                    // console.log(videoName)
+                    console.log(videoName)
+                    var pattern = /\B\s-\s[0-9]+(v[0-9])?/g
+                    console.log(pattern.test(videoName));
                     // looks like a Movie or OVA?
                 }
             }
