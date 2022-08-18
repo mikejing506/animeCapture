@@ -4,40 +4,43 @@ let re = new RegExp('^\\[.*?\\](\\s)', 'g')
 let regName = new RegExp(/\B\s-\s[0-9]+(v[0-9])?/, 'g')
 let regNameInSq = new RegExp('\\[[0-9]*?\\]', 'g')
 
-fs.readdir('Z:\\btdownload\\anime', (err, files) => {
-    let bangumiName,bangumiEP;
-    files.forEach(videoName => {
-        let slice = re.exec(videoName)
-        if (slice && videoName[slice[0].length] !== '[') {//[subGroupName] Anime Name with ep[balaba]
-            let _videoName = videoName.substring(slice[0].length)
-            // console.log(_videoName)
-            let ep = regName.exec(_videoName);
-            // console.log(ep)
-            if (ep) { //[subGroupName] Anime Name - EP [balaba]
-                // console.log(videoName)
-                bangumiName = _videoName.substring(0, ep.index)
-                bangumiEP = ep[0].split('- ')[1]
-                // console.log(`${bangumiName} - ${bangumiEP}`)
-            } else {
-                ep = regNameInSq.exec(_videoName) //[subGroupName] Anime Name [Ep][balaba]
-                // console.log(name)
-                if(ep){
-                    bangumiName = _videoName.substring(0, ep.index)
-                    let Sq = new RegExp('[\\]\\[]','g')
-                    bangumiEP = ep[0].replace(Sq,'')
-                    // console.log(`${bangumiName} - ${bangumiEP}`)
-                }else{
-                    console.log(videoName)
-                    var pattern = /\B\s-\s[0-9]+(v[0-9])?/g
-                    console.log(pattern.test(videoName));
-                    // looks like a Movie or OVA?
-                }
-            }
-        } else {//[subGroupName][ Anime Name ][Ep][balaba]
+let files = require('./files.json')
+console.log(files)
+
+// fs.readdir('Z:\\btdownload\\anime', (err, files) => {
+//     let bangumiName,bangumiEP;
+//     files.forEach(videoName => {
+//         let slice = re.exec(videoName)
+//         if (slice && videoName[slice[0].length] !== '[') {//[subGroupName] Anime Name with ep[balaba]
+//             let _videoName = videoName.substring(slice[0].length)
+//             // console.log(_videoName)
+//             let ep = regName.exec(_videoName);
+//             // console.log(ep)
+//             if (ep) { //[subGroupName] Anime Name - EP [balaba]
+//                 console.log(videoName)
+//                 bangumiName = _videoName.substring(0, ep.index)
+//                 bangumiEP = ep[0].split('- ')[1]
+//                 // console.log(`${bangumiName} - ${bangumiEP}`)
+//             } else {
+//                 ep = regNameInSq.exec(_videoName) //[subGroupName] Anime Name [Ep][balaba]
+//                 // console.log(name)
+//                 if(ep){
+//                     bangumiName = _videoName.substring(0, ep.index)
+//                     let Sq = new RegExp('[\\]\\[]','g')
+//                     bangumiEP = ep[0].replace(Sq,'')
+//                     // console.log(`${bangumiName} - ${bangumiEP}`)
+//                 }else{
+//                     console.log(videoName)
+//                     // var pattern = /\B\s-\s[0-9]+(v[0-9])?/g
+//                     // console.log(pattern.test(videoName));
+//                     // looks like a Movie or OVA?
+//                 }
+//             }
+//         } else {//[subGroupName][ Anime Name ][Ep][balaba]
             
-        }
-    })
-})
+//         }
+//     })
+// })
 
 // let videoName = '[ANi] 川尻小玉的懶散生活 - 11 [1080P][Baha][WEB-DL][AAC AVC][CHT].mp4'
 
@@ -67,3 +70,4 @@ fs.readdir('Z:\\btdownload\\anime', (err, files) => {
 // } else {//[subGroupName][ Anime Name ][Ep][balaba]
     
 // }
+
